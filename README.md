@@ -24,3 +24,4 @@ Assumptions:
 
 1. For a trip, the revenue(trip duration * 0.10) is counted against the departure station.
 2. Age is calculated as current year i.e. 2019 - birthyear
+3. Ages of the customers are stored in the age buckets for the 1 task
