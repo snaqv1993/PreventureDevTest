@@ -6,6 +6,8 @@ const convert = require('convert-seconds');
 
 const app = express()
 
+
+//Method to get information about a station
 app.get('/station/:id', function(req, res) {
 	try{
 		fromStationID = Number(req.params.id);
@@ -42,21 +44,15 @@ app.get('/station/:id', function(req, res) {
 
 		}
 
-		//let ageBucketMapTemp = {
-			let below15 = new Set();
-			let between16And30 = new Set();
-			let between31And45 = new Set();
-			let above46 = new Set();
-			// "16 - 30" : new Set(),
-			// "31 - 45" : new Set(),
-			// "46+" : new Set()
-		//};
+		let below15 = new Set();
+		let between16And30 = new Set();
+		let between31And45 = new Set();
+		let above46 = new Set();
 
 		filteredArr.map(d => {
 			if(d.birthyear !== null){
 				let age = 2019 - d.birthyear
 				if(age < 16){
-					//ageBucketMap["0 - 15"].push(age);
 					below15.add(age);
 				}
 				else if(age >= 16 && age <= 30){
@@ -105,6 +101,7 @@ app.get('/station/:id', function(req, res) {
 )
 
 
+//Method to get top earning stations
 app.get('/topstations', function (req, res) {
 	try{
 		const stations = new Set(data.map(d => {
@@ -139,8 +136,7 @@ app.get('/topstations', function (req, res) {
 })
 
 
-
-
+//Method to get bikes that need repair
 app.get('/repairbikes', function (req, res) {
 	try{
 		let bikesNeedingRepairs = [];
