@@ -70,7 +70,6 @@ app.get('/station/:id', function(req, res) {
 				biggestAgeGroup = arr
 		});
 
-
 		const totalRevenue = filteredArr.reduce((acc, curr) => {
 			return acc + Number.parseFloat(curr.tripduration.replace(/,/g, ''));
 		}, 0.00);
@@ -82,10 +81,15 @@ app.get('/station/:id', function(req, res) {
 			"StationID" : mostPopularDestination.to_station_id,
 			"StationName" : mostPopularDestination.to_station_name
 		}
-		responseToSend["PrevalentAgeGroup"] = {};
-		responseToSend["PrevalentAgeGroup"]["AgeGroup"] = biggestAgeGroup[0];
-		biggestAgeGroup.shift();
-		responseToSend["PrevalentAgeGroup"]["CustomerAges"] = biggestAgeGroup;
+		if(biggestAgeGroup.length < 2){
+			responseToSend["PrevalentAgeGroup"] = "No customers for this station";
+		}
+		else{
+			responseToSend["PrevalentAgeGroup"] = {};
+			responseToSend["PrevalentAgeGroup"]["AgeGroup"] = biggestAgeGroup[0];
+			biggestAgeGroup.shift();
+			responseToSend["PrevalentAgeGroup"]["CustomerAges"] = biggestAgeGroup;
+		}
 		let timeObject = convert(totalRevenue)
 		responseToSend["TotalRevenue"] = "$" + Number.parseFloat((timeObject.hours * 60 * 0.10) + (timeObject.minutes * 0.10) + ((timeObject.seconds / 60) * 0.10)).toFixed(2)
 		res.setHeader('Content-Type', 'application/json');
