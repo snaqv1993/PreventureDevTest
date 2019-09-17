@@ -44,35 +44,32 @@ app.get('/station/:id', function(req, res) {
 
 		}
 
-		let below15 = new Set();
-		let between16And30 = new Set();
-		let between31And45 = new Set();
-		let above46 = new Set();
+		let ageArray = [["0 - 15"] , ["16 - 30"], ["31 - 45"], ["46+"]]
 
 		filteredArr.map(d => {
 			if(d.birthyear !== null){
 				let age = 2019 - d.birthyear
 				if(age < 16){
-					below15.add(age);
+					ageArray[0].push(age)
 				}
 				else if(age >= 16 && age <= 30){
-					between16And30.add(age);
+					ageArray[1].push(age)
 				}
 				else if(age >= 31 && age <= 45){
-					between31And45.add(age);
+					ageArray[2].push(age)
 				}
 				else{
-					above46.add(age);
+					ageArray[3].push(age)
 				}
 			}
 		})
 
-		let ageBucketMap = {
-			"0 - 15" : Array.from(below15),
-			"16 - 30" : Array.from(between16And30),
-			"31 - 45" : Array.from(between31And45),
-			"46+" : Array.from(above46)
-		};
+		let biggestAgeGroup = ageArray[0];
+		ageArray.map(arr => {
+			if(arr.length > biggestAgeGroup.length)
+				biggestAgeGroup = arr
+		});
+
 
 
 		const totalRevenue = filteredArr.reduce((acc, curr) => {
@@ -83,15 +80,17 @@ app.get('/station/:id', function(req, res) {
 		responseToSend["StationID"] = fromStationID;
 		responseToSend["StationName"] = stationName.from_station_name;
 		responseToSend["MostPopularDestionation"] = {
-			"Station ID" : mostPopularDestination.to_station_id,
-			"Station Name" : mostPopularDestination.to_station_name
+			"StationID" : mostPopularDestination.to_station_id,
+			"StationName" : mostPopularDestination.to_station_name
 		}
-		responseToSend["CustomerAgeGroups"] = ageBucketMap;
-		//responseToSend["TotalRevenue"] = Number.parseFloat((totalRevenue / 60)  * 0.10).toFixed(2);
+		responseToSend["PrevalentAgeGroup"] = {};
+		responseToSend["PrevalentAgeGroup"]["AgeGroup"] = biggestAgeGroup[0];
+		biggestAgeGroup.shift();
+		responseToSend["PrevalentAgeGroup"]["CustomerAges"] = biggestAgeGroup;
 		let timeObject = convert(totalRevenue)
 		responseToSend["TotalRevenue"] = "$" + Number.parseFloat((timeObject.hours * 60 * 0.10) + (timeObject.minutes * 0.10) + ((timeObject.seconds / 60) * 0.10)).toFixed(2)
 		res.setHeader('Content-Type', 'application/json');
-		res.end(JSON.stringify({ "Station Stats": responseToSend }));
+		res.end(JSON.stringify({ "StationStats": responseToSend }));
 	}
 	catch(e){
 		res.setHeader('Content-Type', 'application/json');
@@ -127,7 +126,7 @@ app.get('/topstations', function (req, res) {
 		}
 
 		res.setHeader('Content-Type', 'application/json');
-		res.end(JSON.stringify({ "Top Revenue Generating Stations": responseToSend }));
+		res.end(JSON.stringify({ "TopRevenueGeneratingStations": responseToSend }));
 	}
 	catch(e){
 		res.setHeader('Content-Type', 'application/json');
@@ -158,7 +157,7 @@ app.get('/repairbikes', function (req, res) {
 		}
 
 		res.setHeader('Content-Type', 'application/json');
-		res.end(JSON.stringify({ "Bikes needing repairs": responseToSend }));
+		res.end(JSON.stringify({ "BikesNeedingRepairs": responseToSend }));
 	}
 	catch(e){
 		res.setHeader('Content-Type', 'application/json');
