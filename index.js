@@ -71,7 +71,6 @@ app.get('/station/:id', function(req, res) {
 		});
 
 
-
 		const totalRevenue = filteredArr.reduce((acc, curr) => {
 			return acc + Number.parseFloat(curr.tripduration.replace(/,/g, ''));
 		}, 0.00);
@@ -135,6 +134,7 @@ app.get('/topstations', function (req, res) {
 })
 
 
+
 //Method to get bikes that need repair
 app.get('/repairbikes', function (req, res) {
 	try{
@@ -148,7 +148,6 @@ app.get('/repairbikes', function (req, res) {
 			}, 0)
 			bikesAndTime.push([item, arr4]);
 		}
-
 
 		let responseToSend = []
 		for(let i = 0; i < bikesAndTime.length; i++){
