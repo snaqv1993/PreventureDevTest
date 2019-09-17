@@ -6,7 +6,7 @@ Steps to run:
 
 1. Ensure node and npm are installed on the machine
 2. Clone the Repo
-3. Open Command prompt and move to the local directory where repository has been cloned. Make sure you are into the folder where index.js is located.
+3. Open Command prompt and move to the local directory where repository has been cloned. Make sure you are into the folder where index.js is located and "dataset.json" is available in the same level.
 4. Run either "nodemon index.js" or "node index.js"
 
 URLS
