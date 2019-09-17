@@ -21,23 +21,23 @@ app.get('/station/:id', function(req, res) {
 		const filteredArr = data.filter(d => d.from_station_id == fromStationID)
 
 		let modeMap = {};
-		let maxEl = filteredArr[0].to_station_id, maxCount = 1;
+		let maxStationId = filteredArr[0].to_station_id, maxCount = 1;
 		for(let i = 0; i < filteredArr.length; i++)
 		{
-			let el = filteredArr[i].to_station_id;
-			if(modeMap[el] == null)
-				modeMap[el] = 1;
+			let stationId = filteredArr[i].to_station_id;
+			if(modeMap[stationId] == null)
+				modeMap[stationId] = 1;
 			else
-				modeMap[el]++;  
-			if(modeMap[el] > maxCount)
+				modeMap[stationId]++;  
+			if(modeMap[stationId] > maxCount)
 			{
-				maxEl = el;
-				maxCount = modeMap[el];
+				maxStationId = stationId;
+				maxCount = modeMap[stationId];
 			}
 		}	
 
 		for(let i = 0; i < data.length; i++){
-			if(data[i].to_station_id === maxEl){
+			if(data[i].to_station_id === maxStationId){
 				mostPopularDestination = data[i];
 				break;
 			}
